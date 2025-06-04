@@ -6,3 +6,14 @@ channel = "stable-24_05"
 
 [deployment]
 run = ["sh", "-c", "npm run dev"]
+
+[workflows]
+
+[[workflows.workflow]]
+name = "Got Command"
+mode = "sequential"
+author = 41743258
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git checkout -b feature/multi-url-crawl main"
