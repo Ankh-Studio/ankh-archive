@@ -73,12 +73,12 @@ export async function createObsidianNote(
 	const frontmatter = await generateFrontmatter(template.properties || []);
 	
 	// Combine frontmatter with template content
-	const fileContent = frontmatter + template.content;
+	const fileContent = frontmatter + template.noteContentFormat;
 	
 	// Determine note name and path based on template behavior
 	const isDailyNote = template.behavior === 'append-daily' || template.behavior === 'prepend-daily';
 	const noteName = isDailyNote ? '' : template.noteNameFormat || '';
-	const path = isDailyNote ? '' : template.folder || '';
+	const path = isDailyNote ? '' : template.path || '';
 	const vault = template.vault || '';
 	
 	// Save to Obsidian
