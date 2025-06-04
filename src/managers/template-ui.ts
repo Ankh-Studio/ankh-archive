@@ -22,9 +22,9 @@ export function updateTemplateList(loadedTemplates?: Template[]): void {
 		console.error('Template list element not found');
 		return;
 	}
-	
+
 	const templatesToUse = loadedTemplates || templates;
-	
+
 	// Filter out null or undefined templates
 	const validTemplates = templatesToUse.filter((template): template is Template => 
 		template != null && typeof template === 'object' && 'id' in template && 'name' in template
@@ -33,7 +33,7 @@ export function updateTemplateList(loadedTemplates?: Template[]): void {
 	templateList.innerHTML = '';
 	validTemplates.forEach((template, index) => {
 		const li = document.createElement('li');
-		
+
 		const dragHandle = createElementWithClass('div', 'drag-handle');
 		dragHandle.appendChild(createElementWithHTML('i', '', { 'data-lucide': 'grip-vertical' }));
 		li.appendChild(dragHandle);
@@ -95,7 +95,7 @@ export function updateTemplateList(loadedTemplates?: Template[]): void {
 			e.stopPropagation();
 			deleteTemplateFromList(template.id);
 		});
-		
+
 		if (index === editingTemplateIndex) {
 			li.classList.add('active');
 		}
@@ -180,7 +180,7 @@ export function showTemplateEditor(template: Template | null): void {
 
 	const behaviorSelect = document.getElementById('template-behavior') as HTMLSelectElement;
 	if (behaviorSelect) behaviorSelect.value = editingTemplate.behavior || 'create';
-	
+
 	const noteNameFormat = document.getElementById('note-name-format') as HTMLInputElement;
 	if (noteNameFormat) {
 		noteNameFormat.value = editingTemplate.noteNameFormat || '{{title}}';
@@ -389,7 +389,7 @@ export function addPropertyToEditor(name: string = '', value: string = '', id: s
 	if (select) {
 		select.addEventListener('change', function() {
 			if (propertySelectedDiv) updateSelectedOption(this.value, propertySelectedDiv);
-			
+
 			// Get the current name of the property
 			const nameInput = propertyDiv.querySelector('.property-name') as HTMLInputElement;
 			const currentName = nameInput.value;
@@ -425,7 +425,7 @@ export function addPropertyToEditor(name: string = '', value: string = '', id: s
 		if (selectedType) {
 			select.value = selectedType.type;
 			updateSelectedOption(selectedType.type, propertySelectedDiv);
-			
+
 			// Only update the property type if the name is not empty
 			if (this.value.trim() !== '') {
 				updatePropertyType(this.value, selectedType.type).then(() => {
@@ -434,7 +434,7 @@ export function addPropertyToEditor(name: string = '', value: string = '', id: s
 					console.error(`Failed to update property type for ${this.value}:`, error);
 				});
 			}
-			
+
 			// Fill in the default value if it exists and the value input is empty
 			if (selectedType.defaultValue && !valueInput.value) {
 				valueInput.value = selectedType.defaultValue;
@@ -461,14 +461,14 @@ export function addPropertyToEditor(name: string = '', value: string = '', id: s
 
 function updateSelectedOption(value: string, propertySelected: HTMLElement): void {
 	const iconName = getPropertyTypeIcon(value);
-	
+
 	// Clear existing content
 	propertySelected.innerHTML = '';
-	
+
 	// Create and append the new icon element
 	const iconElement = createElementWithHTML('i', '', { 'data-lucide': iconName });
 	propertySelected.appendChild(iconElement);
-	
+
 	propertySelected.setAttribute('data-value', value);
 	initializeIcons(propertySelected);
 }
@@ -605,4 +605,7 @@ function updatePropertyNameSuggestions(): void {
 
 export function refreshPropertyNameSuggestions(): void {
 	updatePropertyNameSuggestions();
+}
+function initializeCrawlControls() {
+    // Implementation for initializing crawl controls
 }

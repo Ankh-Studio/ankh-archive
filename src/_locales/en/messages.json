@@ -754,6 +754,27 @@
 	"templateTriggersDescription": {
 		"message": "Define rules to automatically select this template if it matches a URL pattern or contains schema.org data. One rule per line."
 	},
+	"crawlUrls": {
+		"message": "Crawl URLs"
+	},
+	"crawlUrlsDescription": {
+		"message": "Enter URLs to crawl (one per line). This template will be applied to each URL automatically."
+	},
+	"startCrawl": {
+		"message": "Start Crawl"
+	},
+	"crawlInProgress": {
+		"message": "Crawling in progress..."
+	},
+	"crawlCompleted": {
+		"message": "Crawl completed successfully"
+	},
+	"crawlFailed": {
+		"message": "Crawl failed"
+	},
+	"crawlProcessing": {
+		"message": "Processing URL $1 of $2"
+	},
 	"templatesHeading": {
 		"message": "Templates"
 	},

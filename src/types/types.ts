@@ -9,6 +9,12 @@ export interface Template {
 	triggers?: string[];
 	vault?: string;
 	context?: string;
+	isCrawlTemplate?: boolean;
+}
+
+export interface CrawlRequest {
+	urls: string[];
+	templateId: string;
 }
 
 export interface Property {
