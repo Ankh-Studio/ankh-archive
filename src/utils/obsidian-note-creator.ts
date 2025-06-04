@@ -64,6 +64,27 @@ export async function generateFrontmatter(properties: Property[]): Promise<strin
 	return frontmatter;
 }
 
+export async function createObsidianNote(
+	template: Template,
+	currentVariables: any,
+	settings: any
+): Promise<void> {
+	// Generate frontmatter from template properties
+	const frontmatter = await generateFrontmatter(template.properties || []);
+	
+	// Combine frontmatter with template content
+	const fileContent = frontmatter + template.content;
+	
+	// Determine note name and path based on template behavior
+	const isDailyNote = template.behavior === 'append-daily' || template.behavior === 'prepend-daily';
+	const noteName = isDailyNote ? '' : template.noteNameFormat || '';
+	const path = isDailyNote ? '' : template.folder || '';
+	const vault = template.vault || '';
+	
+	// Save to Obsidian
+	await saveToObsidian(fileContent, noteName, path, vault, template.behavior);
+}
+
 export async function saveToObsidian(
 	fileContent: string,
 	noteName: string,
