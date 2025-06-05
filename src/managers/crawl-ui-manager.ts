@@ -160,7 +160,8 @@ export class CrawlUIManager {
 		}
 
 		// Hide input, show progress
-		this.modal?.querySelector('.crawl-input-section')?.setAttribute('style', 'display: none;');
+		const inputSection = this.modal?.querySelector('.crawl-input-section') as HTMLElement;
+		if (inputSection) inputSection.style.display = 'none';
 		progressSection.style.display = 'block';
 		startBtn.style.display = 'none';
 		cancelBtn.textContent = 'Cancel';
@@ -216,9 +217,13 @@ export class CrawlUIManager {
 
 	private resetModal(): void {
 		// Reset all sections to initial state
-		this.modal?.querySelector('.crawl-input-section')?.removeAttribute('style');
-		this.modal?.querySelector('.crawl-progress-section')?.setAttribute('style', 'display: none;');
-		this.modal?.querySelector('.crawl-results-section')?.setAttribute('style', 'display: none;');
+		const inputSection = this.modal?.querySelector('.crawl-input-section') as HTMLElement;
+		const progressSection = this.modal?.querySelector('.crawl-progress-section') as HTMLElement;
+		const resultsSection = this.modal?.querySelector('.crawl-results-section') as HTMLElement;
+		
+		if (inputSection) inputSection.style.display = '';
+		if (progressSection) progressSection.style.display = 'none';
+		if (resultsSection) resultsSection.style.display = 'none';
 		
 		const startBtn = this.modal?.querySelector('#crawl-start-btn') as HTMLButtonElement;
 		const cancelBtn = this.modal?.querySelector('#crawl-cancel-btn') as HTMLButtonElement;
