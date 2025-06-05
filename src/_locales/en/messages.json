@@ -775,6 +775,12 @@
 	"crawlProcessing": {
 		"message": "Processing URL $1 of $2"
 	},
+	"cancel": {
+		"message": "Cancel"
+	},
+	"close": {
+		"message": "Close"
+	},
 	"templatesHeading": {
 		"message": "Templates"
 	},

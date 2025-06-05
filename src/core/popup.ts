@@ -24,6 +24,7 @@ import { debounce } from '../utils/debounce';
 import { sanitizeFileName } from '../utils/string-utils';
 import { saveFile } from '../utils/file-utils';
 import { translatePage, getMessage, setupLanguageAndDirection } from '../utils/i18n';
+import { crawlUIManager } from '../managers/crawl-ui-manager';
 
 interface ReaderModeResponse {
 	success: boolean;
@@ -37,6 +38,9 @@ let currentVariables: { [key: string]: string } = {};
 let currentTabId: number | undefined;
 let lastSelectedVault: string | null = null;
 let isHighlighterMode = false;
+
+// Make templates available globally for crawl functionality
+(window as any).templates = templates;
 
 const isSidePanel = window.location.pathname.includes('side-panel.html');
 
@@ -206,6 +210,9 @@ async function loadAndSetupTemplates() {
 	} else {
 		currentTemplate = templates[0];
 	}
+
+	// Update global reference for crawl functionality
+	(window as any).templates = templates;
 }
 
 function setupMessageListeners() {
@@ -337,6 +344,7 @@ function setupEventListeners(tabId: number) {
 	const copyContentButton = document.getElementById('copy-content');
 	const saveDownloadsButton = document.getElementById('save-downloads');
 	const shareContentButton = document.getElementById('share-content');
+	const crawlUrlsButton = document.getElementById('crawl-urls');
 
 	if (moreButton && moreDropdown) {
 		moreButton.addEventListener('click', (e) => {
@@ -347,6 +355,16 @@ function setupEventListeners(tabId: number) {
 		// Close dropdown when clicking outside
 		document.addEventListener('click', (e) => {
 			if (!moreButton.contains(e.target as Node)) {
+				moreDropdown.classList.remove('show');
+			}
+		});
+	}
+
+	if (crawlUrlsButton) {
+		crawlUrlsButton.addEventListener('click', () => {
+			crawlUIManager.openModal();
+			// Close the more dropdown
+			if (moreDropdown) {
 				moreDropdown.classList.remove('show');
 			}
 		});

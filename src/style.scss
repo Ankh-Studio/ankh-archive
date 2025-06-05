@@ -18,7 +18,9 @@ body {
 	font-size: var(--font-ui-medium);
 }
 
-@import 'styles/mobile';
+@import "styles/side-panel";
+@import "styles/mobile";
+@import "styles/crawl-modal";
 
 @import 'styles/buttons';
 @import 'styles/charts';
@@ -35,7 +37,6 @@ body {
 @import 'styles/rtl';
 @import 'styles/safari';
 @import 'styles/settings';
-@import 'styles/side-panel';
 @import 'styles/templates';
 @import 'styles/tree-items';
 @import 'styles/toggles';
