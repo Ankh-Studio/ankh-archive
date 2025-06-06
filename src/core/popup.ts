@@ -24,6 +24,7 @@ import { debounce } from '../utils/debounce';
 import { sanitizeFileName } from '../utils/string-utils';
 import { saveFile } from '../utils/file-utils';
 import { translatePage, getMessage, setupLanguageAndDirection } from '../utils/i18n';
+import { createMultiUrlModal } from '../utils/multi-url-modal';
 
 interface ReaderModeResponse {
 	success: boolean;
@@ -1190,9 +1191,7 @@ async function handleClipObsidian(): Promise<void> {
 }
 
 // New function to handle multi-URL clip
-async function handleMultiUrlClip() {
-	const { createMultiUrlModal } = await import('../utils/multi-url-modal');
-	
+async function handleMultiUrlClip() {	
 	if (!currentTemplate || !lastSelectedVault) {
 		showError('noTemplateOrVault');
 		return;
