@@ -16,13 +16,13 @@ async function initialize() {
 		// Initialize the global highlighter state
 		const result = await browser.storage.local.get('isHighlighterMode') as { isHighlighterMode?: boolean };
 		isHighlighterMode = result.isHighlighterMode ?? false;
-		
+
 		// Set up tab listeners
 		await setupTabListeners();
-		
+
 		// Initialize context menu
 		await debouncedUpdateContextMenu(-1);
-		
+
 		console.log('Background script initialized successfully');
 	} catch (error) {
 		console.error('Error initializing background script:', error);
@@ -68,7 +68,7 @@ browser.action.onClicked.addListener((tab) => {
 browser.runtime.onMessage.addListener((request: unknown, sender: browser.Runtime.MessageSender, sendResponse: (response?: any) => void): true | undefined => {
 	if (typeof request === 'object' && request !== null) {
 		const typedRequest = request as { action: string; isActive?: boolean; hasHighlights?: boolean; tabId?: number };
-		
+
 		if (typedRequest.action === "extractContent" && sender.tab && sender.tab.id) {
 			browser.tabs.sendMessage(sender.tab.id, request).then(sendResponse);
 			return true;
@@ -375,7 +375,7 @@ async function toggleHighlighterMode(tabId: number) {
 
 async function highlightSelection(tabId: number, info: browser.Menus.OnClickData) {
 	isHighlighterMode = true;
-	
+
 	const highlightData: Partial<TextHighlightData> = {
 		id: Date.now().toString(),
 		type: 'text',
@@ -435,3 +435,46 @@ async function injectReaderScript(tabId: number) {
 initialize().catch(error => {
 	console.error('Failed to initialize background script:', error);
 });
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+	if (request.action === "triggerQuickClip") {
+			handleClipObsidian().then(() => {
+				sendResponse({success: true});
+			}).catch((error) => {
+				console.error('Error in handleClipObsidian:', error);
+				sendResponse({success: false, error: error.message});
+			});
+			return true;
+		} else if (request.action === "openMultiUrlModal") {
+			// Message will be handled by popup when it receives this
+			sendResponse({success: true});
+			return true;
+		}
+});
+
+async function handleClipObsidian() {
+    try {
+        const activeTabs = await browser.tabs.query({ active: true, currentWindow: true });
+        if (activeTabs.length === 0 || !activeTabs[0].id) {
+            console.warn("No active tab found.");
+            return;
+        }
+
+        const tabId = activeTabs[0].id;
+        const response = await browser.tabs.sendMessage(tabId, { action: "extractContent" });
+
+        if (!response || !response.success) {
+            console.error("Content extraction failed:", response ? response.error : "Unknown error");
+            return;
+        }
+
+        // Basic content for testing
+        const title = activeTabs[0].title || "Untitled";
+        const extractedContent = response.data || "No content extracted.";
+
+        console.log("Extracted Content:", extractedContent);
+        console.log("Page Title:", title);
+
+    } catch (error) {
+        console.error("Error in handleClipObsidian:", error);
+    }
+}

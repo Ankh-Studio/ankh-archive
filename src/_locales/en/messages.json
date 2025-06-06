@@ -346,6 +346,21 @@
 	"highlightPage": {
 		"message": "Highlight page"
 	},
+	"clipMultipleUrls": {
+		"message": "Clip Multiple URLs"
+	},
+	"urlsList": {
+		"message": "URLs (one per line)"
+	},
+	"urlsListHelp": {
+		"message": "Enter one URL per line. Invalid URLs will be highlighted."
+	},
+	"startClipping": {
+		"message": "Start Clipping"
+	},
+	"noTemplateOrVault": {
+		"message": "Please select a template and vault first"
+	},
 	"highlighter": {
 		"message": "Highlighter"
 	},

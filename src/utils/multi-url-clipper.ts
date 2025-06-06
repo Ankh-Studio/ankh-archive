@@ -55,15 +55,28 @@ async function clipSingleUrl(
 	selectedVault: string, 
 	basePath: string
 ): Promise<MultiUrlClipResult> {
-	// Create a temporary tab to extract content
-	const tab = await browser.tabs.create({ url, active: false });
+	let tabId: number | undefined;
 	
 	try {
+		debugLog('MultiUrlClipper', `Starting clip for URL: ${url}`);
+		
+		// Create a temporary tab to extract content
+		const tab = await browser.tabs.create({ url, active: false });
+		tabId = tab.id;
+		
+		if (!tabId) {
+			throw new Error('Failed to create tab');
+		}
+
 		// Wait for the page to load
-		await waitForTabComplete(tab.id!);
+		await waitForTabComplete(tabId);
+		
+		// Ensure content script is loaded
+		const { ensureContentScriptLoaded } = await import('./content-script-utils');
+		await ensureContentScriptLoaded(tabId);
 
 		// Extract page content
-		const extractedData = await extractPageContent(tab.id!);
+		const extractedData = await extractPageContent(tabId);
 		if (!extractedData) {
 			throw new Error('Failed to extract page content');
 		}
@@ -86,18 +99,18 @@ async function clipSingleUrl(
 		};
 
 		// Compile note name
-		const noteName = await compileTemplate(tab.id!, template.noteNameFormat, variables, url);
+		const noteName = await compileTemplate(tabId, template.noteNameFormat, variables, url);
 		const sanitizedNoteName = sanitizeFileName(noteName.trim());
 
 		// Compile note content
-		const noteContent = await compileTemplate(tab.id!, template.noteContentFormat, variables, url);
+		const noteContent = await compileTemplate(tabId, template.noteContentFormat, variables, url);
 
 		// Compile properties
 		const compiledProperties = await Promise.all(
 			template.properties.map(async (prop) => ({
 				id: prop.id,
 				name: prop.name,
-				value: await compileTemplate(tab.id!, prop.value, variables, url)
+				value: await compileTemplate(tabId!, prop.value, variables, url)
 			}))
 		);
 
@@ -106,12 +119,14 @@ async function clipSingleUrl(
 		const fileContent = frontmatter + noteContent;
 
 		// Determine path
-		const compiledPath = await compileTemplate(tab.id!, template.path, variables, url);
+		const compiledPath = await compileTemplate(tabId, template.path, variables, url);
 		const fullPath = basePath ? `${basePath}/${compiledPath}` : compiledPath;
 
 		// Save to Obsidian
 		await saveToObsidian(fileContent, sanitizedNoteName, fullPath, selectedVault, template.behavior);
 		await incrementStat('addToObsidian', selectedVault, fullPath);
+
+		debugLog('MultiUrlClipper', `Successfully saved note: ${sanitizedNoteName}`);
 
 		return {
 			url,
@@ -119,10 +134,18 @@ async function clipSingleUrl(
 			noteName: sanitizedNoteName
 		};
 
+	} catch (error) {
+		const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+		debugLog('MultiUrlClipper', `Error clipping ${url}: ${errorMessage}`);
+		throw error;
 	} finally {
 		// Close the temporary tab
-		if (tab.id) {
-			await browser.tabs.remove(tab.id);
+		if (tabId) {
+			try {
+				await browser.tabs.remove(tabId);
+			} catch (error) {
+				debugLog('MultiUrlClipper', `Error closing tab ${tabId}: ${error}`);
+			}
 		}
 	}
 }

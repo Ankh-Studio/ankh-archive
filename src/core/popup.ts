@@ -218,6 +218,10 @@ function setupMessageListeners() {
 				sendResponse({success: false, error: error.message});
 			});
 			return true;
+		} else if (request.action === "openMultiUrlModal") {
+			handleMultiUrlClip();
+			sendResponse({success: true});
+			return true;
 		} else if (request.action === "tabUrlChanged") {
 			if (request.tabId === currentTabId) {
 				if (currentTabId !== undefined) {
@@ -869,7 +873,8 @@ async function getReplacedTemplate(template: Template, variables: { [key: string
 		name: template.name,
 		behavior: template.behavior,
 		noteNameFormat: await compileTemplate(tabId, template.noteNameFormat, variables, currentUrl),
-		path: template.path		noteContentFormat: await compileTemplate(tabId, template.noteContentFormat, variables, currentUrl),
+		path: await compileTemplate(tabId, template.path, variables, currentUrl),
+		noteContentFormat: await compileTemplate(tabId, template.noteContentFormat, variables, currentUrl),
 		properties: [],
 		triggers: template.triggers
 	};
@@ -1186,30 +1191,41 @@ async function handleClipObsidian(): Promise<void> {
 
 // New function to handle multi-URL clip
 async function handleMultiUrlClip() {
-	// Show a modal or dialog to get multiple URLs from the user
-	const urls = prompt('Enter multiple URLs separated by commas:');
+	const { createMultiUrlModal } = await import('../utils/multi-url-modal');
+	
+	if (!currentTemplate || !lastSelectedVault) {
+		showError('noTemplateOrVault');
+		return;
+	}
 
-	if (urls) {
-		const urlArray = urls.split(',').map(url => url.trim());
-		for (const url of urlArray) {
-			if (isValidUrl(url)) {
-				// Open each URL in a new tab and clip it
-				try {
-					const tab = await browser.tabs.create({ url: url, active: false });
-					// Wait for the tab to load before clipping (you might need a more robust way to ensure the page is fully loaded)
-					setTimeout(async () => {
-						await browser.tabs.remove(tab.id!);
-					}, 2000); // Wait for 2 seconds
-				} catch (error) {
-					console.error('Error clipping URL:', url, error);
-				}
-			} else {
-				console.warn('Invalid URL:', url);
-				alert(`Invalid URL: ${url}`);
+	const modal = createMultiUrlModal(
+		templates,
+		currentTemplate,
+		lastSelectedVault,
+		(results) => {
+			// Handle completion results
+			const successful = results.filter(r => r.success).length;
+			const failed = results.filter(r => !r.success).length;
+			
+			debugLog('MultiUrlClip', `Completed: ${successful} successful, ${failed} failed`);
+			
+			// Show completion message
+			const clipButton = document.getElementById('clip-btn');
+			if (clipButton) {
+				const originalText = clipButton.textContent || getMessage('addToObsidian');
+				clipButton.textContent = `Clipped ${successful} URLs`;
+				setTimeout(() => {
+					clipButton.textContent = originalText;
+				}, 3000);
+			}
+			
+			if (!isSidePanel) {
+				setTimeout(() => window.close(), 1000);
 			}
 		}
-		alert('URLs clipping completed!');
-	}
+	);
+
+	document.body.appendChild(modal);
 }
 
 function addSecondaryAction(container: Element, actionType: string, handler: () => void) {
