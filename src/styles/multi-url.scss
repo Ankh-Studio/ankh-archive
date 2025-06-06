@@ -1,0 +1,213 @@
+
+.multi-url-modal {
+  width: 600px;
+  max-width: 90vw;
+  max-height: 80vh;
+  
+  .form-group {
+    margin-bottom: 1rem;
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid var(--background-modifier-border);
+      border-radius: 4px;
+      background: var(--background-primary);
+      color: var(--text-normal);
+      
+      &:focus {
+        outline: none;
+        border-color: var(--interactive-accent);
+      }
+    }
+    
+    .form-help {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+  }
+  
+  .url-validation {
+    margin: 1rem 0;
+    padding: 0.75rem;
+    border-radius: 4px;
+    background: var(--background-secondary);
+    
+    .validation-valid {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-success);
+      margin-bottom: 0.5rem;
+      
+      i {
+        width: 16px;
+        height: 16px;
+      }
+    }
+    
+    .validation-invalid {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      color: var(--text-error);
+      
+      i {
+        width: 16px;
+        height: 16px;
+        margin-top: 2px;
+      }
+      
+      details {
+        margin-top: 0.5rem;
+        
+        summary {
+          cursor: pointer;
+          font-size: 0.9rem;
+          
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+        
+        ul {
+          margin: 0.5rem 0 0 1rem;
+          padding: 0;
+          
+          li {
+            font-family: var(--font-monospace);
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+          }
+        }
+      }
+    }
+  }
+  
+  .progress-container {
+    margin: 1rem 0;
+    
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--background-modifier-border);
+      border-radius: 4px;
+      overflow: hidden;
+      
+      .progress-fill {
+        height: 100%;
+        background: var(--interactive-accent);
+        transition: width 0.3s ease;
+        width: 0%;
+      }
+    }
+    
+    .progress-text {
+      text-align: center;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+  }
+}
+
+.multi-url-results-modal {
+  width: 600px;
+  max-width: 90vw;
+  max-height: 80vh;
+  
+  .results-summary {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: var(--background-secondary);
+    border-radius: 4px;
+    
+    .result-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      
+      i {
+        width: 20px;
+        height: 20px;
+      }
+      
+      &.success {
+        color: var(--text-success);
+      }
+      
+      &.error {
+        color: var(--text-error);
+      }
+    }
+  }
+  
+  .results-list {
+    max-height: 400px;
+    overflow-y: auto;
+    
+    .result-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--background-modifier-border);
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      .result-icon {
+        margin-top: 2px;
+        
+        i {
+          width: 16px;
+          height: 16px;
+        }
+      }
+      
+      .result-details {
+        flex: 1;
+        min-width: 0;
+        
+        .result-url {
+          font-weight: 500;
+          word-break: break-all;
+        }
+        
+        .result-note {
+          font-size: 0.9rem;
+          color: var(--text-muted);
+          margin-top: 0.25rem;
+        }
+        
+        .result-error {
+          font-size: 0.9rem;
+          color: var(--text-error);
+          margin-top: 0.25rem;
+        }
+      }
+      
+      &.success {
+        .result-icon {
+          color: var(--text-success);
+        }
+      }
+      
+      &.error {
+        .result-icon {
+          color: var(--text-error);
+        }
+      }
+    }
+  }
+}

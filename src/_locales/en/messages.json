@@ -535,6 +535,21 @@
 	"pagesSavedPlural": {
 		"message": "pages saved"
 	},
+	"clipMultipleUrls": {
+		"message": "Clip multiple URLs"
+	},
+	"urlsList": {
+		"message": "URLs (one per line)"
+	},
+	"urlsListHelp": {
+		"message": "Enter one URL per line. Invalid URLs will be highlighted."
+	},
+	"startClipping": {
+		"message": "Start clipping"
+	},
+	"clippingResults": {
+		"message": "Clipping results"
+	},
 	"pasteJsonHere": {
 		"message": "Paste JSON here"
 	},

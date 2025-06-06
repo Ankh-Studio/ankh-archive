@@ -204,6 +204,11 @@ const debouncedUpdateContextMenu = debounce(async (tabId: number) => {
 					title: "Save this page",
 					contexts: ["page", "selection", "image", "video", "audio"]
 				},
+				{
+					id: "clip-multiple-urls",
+					title: "Clip multiple URLs",
+					contexts: ["page"]
+				},
 				// {
 				// 	id: "toggle-reader",
 				// 	title: "Reading view",
@@ -248,6 +253,13 @@ const debouncedUpdateContextMenu = debounce(async (tabId: number) => {
 browser.contextMenus.onClicked.addListener(async (info, tab) => {
 	if (info.menuItemId === "open-obsidian-clipper") {
 		browser.action.openPopup();
+	} else if (info.menuItemId === "clip-multiple-urls") {
+		browser.action.openPopup();
+		// Send message to popup to open multi-URL modal
+		setTimeout(() => {
+			browser.runtime.sendMessage({action: "openMultiUrlModal"})
+				.catch(error => console.error("Failed to send multi-URL modal message:", error));
+		}, 500);
 	} else if (info.menuItemId === "enter-highlighter" && tab && tab.id) {
 		await setHighlighterMode(tab.id, true);
 	} else if (info.menuItemId === "exit-highlighter" && tab && tab.id) {
