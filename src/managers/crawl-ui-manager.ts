@@ -101,8 +101,8 @@ export class CrawlUIManager {
 
 	private validateUrls(): void {
 		const urlInput = this.modal?.querySelector('#crawl-urls-input') as HTMLTextAreaElement;
-		const countSpan = this.modal?.querySelector('#crawl-url-count');
-		const invalidSpan = this.modal?.querySelector('#crawl-url-invalid');
+		const countSpan = this.modal?.querySelector('#crawl-url-count') as HTMLElement | null;
+		const invalidSpan = this.modal?.querySelector('#crawl-url-invalid') as HTMLElement | null;
 		const startBtn = this.modal?.querySelector('#crawl-start-btn') as HTMLButtonElement;
 
 		if (!urlInput || !countSpan || !invalidSpan || !startBtn) return;
@@ -160,9 +160,9 @@ export class CrawlUIManager {
 		}
 
 		// Hide input, show progress
-		const inputSection = this.modal?.querySelector('.crawl-input-section') as HTMLElement;
+		const inputSection = this.modal?.querySelector('.crawl-input-section') as HTMLElement | null;
 		if (inputSection) inputSection.style.display = 'none';
-		(progressSection as HTMLElement).style.display = 'block';
+		progressSection.style.display = 'block';
 		startBtn.style.display = 'none';
 		cancelBtn.textContent = 'Cancel';
 
@@ -172,13 +172,13 @@ export class CrawlUIManager {
 			});
 
 			// Show results
-			(progressSection as HTMLElement).style.display = 'none';
-			(resultsSection as HTMLElement).style.display = 'block';
+			progressSection.style.display = 'none';
+			resultsSection.style.display = 'block';
 			cancelBtn.style.display = 'none';
 			closeBtn.style.display = 'inline-block';
 
-			const successSpan = this.modal?.querySelector('#crawl-success-count');
-			const failedSpan = this.modal?.querySelector('#crawl-failed-count');
+			const successSpan = this.modal?.querySelector('#crawl-success-count') as HTMLElement | null;
+			const failedSpan = this.modal?.querySelector('#crawl-failed-count') as HTMLElement | null;
 
 			if (successSpan) {
 				successSpan.textContent = `${results.success} successful`;
@@ -197,9 +197,9 @@ export class CrawlUIManager {
 	}
 
 	private updateProgress(progress: CrawlProgress): void {
-		const progressBar = this.modal?.querySelector('.crawl-progress-fill') as HTMLElement;
-		const currentUrlSpan = this.modal?.querySelector('#crawl-current-url');
-		const progressCountSpan = this.modal?.querySelector('#crawl-progress-count');
+		const progressBar = this.modal?.querySelector('.crawl-progress-fill') as HTMLElement | null;
+		const currentUrlSpan = this.modal?.querySelector('#crawl-current-url') as HTMLElement | null;
+		const progressCountSpan = this.modal?.querySelector('#crawl-progress-count') as HTMLElement | null;
 
 		if (progressBar) {
 			const percentage = (progress.current / progress.total) * 100;
@@ -217,13 +217,13 @@ export class CrawlUIManager {
 
 	private resetModal(): void {
 		// Reset all sections to initial state
-		const inputSection = this.modal?.querySelector('.crawl-input-section') as HTMLElement;
-		const progressSection = this.modal?.querySelector('.crawl-progress-section') as HTMLElement;
-		const resultsSection = this.modal?.querySelector('.crawl-results-section') as HTMLElement;
+		const inputSection = this.modal?.querySelector('.crawl-input-section') as HTMLElement | null;
+		const progressSection = this.modal?.querySelector('.crawl-progress-section') as HTMLElement | null;
+		const resultsSection = this.modal?.querySelector('.crawl-results-section') as HTMLElement | null;
 		
 		if (inputSection) inputSection.style.display = '';
-		if (progressSection) (progressSection as HTMLElement).style.display = 'none';
-		if (resultsSection) (resultsSection as HTMLElement).style.display = 'none';
+		if (progressSection) progressSection.style.display = 'none';
+		if (resultsSection) resultsSection.style.display = 'none';
 		
 		const startBtn = this.modal?.querySelector('#crawl-start-btn') as HTMLButtonElement;
 		const cancelBtn = this.modal?.querySelector('#crawl-cancel-btn') as HTMLButtonElement;
