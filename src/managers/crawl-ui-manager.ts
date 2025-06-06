@@ -162,7 +162,7 @@ export class CrawlUIManager {
 		// Hide input, show progress
 		const inputSection = this.modal?.querySelector('.crawl-input-section') as HTMLElement;
 		if (inputSection) inputSection.style.display = 'none';
-		progressSection.style.display = 'block';
+		(progressSection as HTMLElement).style.display = 'block';
 		startBtn.style.display = 'none';
 		cancelBtn.textContent = 'Cancel';
 
@@ -172,8 +172,8 @@ export class CrawlUIManager {
 			});
 
 			// Show results
-			progressSection.style.display = 'none';
-			resultsSection.style.display = 'block';
+			(progressSection as HTMLElement).style.display = 'none';
+			(resultsSection as HTMLElement).style.display = 'block';
 			cancelBtn.style.display = 'none';
 			closeBtn.style.display = 'inline-block';
 
@@ -222,8 +222,8 @@ export class CrawlUIManager {
 		const resultsSection = this.modal?.querySelector('.crawl-results-section') as HTMLElement;
 		
 		if (inputSection) inputSection.style.display = '';
-		if (progressSection) progressSection.style.display = 'none';
-		if (resultsSection) resultsSection.style.display = 'none';
+		if (progressSection) (progressSection as HTMLElement).style.display = 'none';
+		if (resultsSection) (resultsSection as HTMLElement).style.display = 'none';
 		
 		const startBtn = this.modal?.querySelector('#crawl-start-btn') as HTMLButtonElement;
 		const cancelBtn = this.modal?.querySelector('#crawl-cancel-btn') as HTMLButtonElement;
